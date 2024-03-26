@@ -26,3 +26,18 @@ def get_lambda_from_mass(source_frame_mass, lambda_0_0, M0=1.4):
     for k in range(4): # k in [0, 1, 2, 3]
         lambda_tot += get_lambda_0_k(k=k, lambda_0_0=lambda_0_0) * (1 - source_frame_mass/M0)**(k) / np.math.factorial(k)
     return lambda_tot
+
+
+
+
+
+def get_mass_from_lambda(b0, b1, b2, b3, tidal):
+    '''mass-lambda relation from https://arxiv.org/pdf/2112.10824.pdf
+    '''
+    condition_1 = b2**2 - 3*b1*b3 > 0
+    mass = np.where(condition_1, b0 + b1*np.log(tidal) + b2*np.log(tidal)**2 + b3*np.log(tidal)**3, 0)
+    
+    condition_2 = b0 + b1*np.log(5000) + b2*np.log(5000)**2 + b3*np.log(5000)**3 > 1
+    mass = np.where(condition_2, 0, mass)
+    
+    return mass
